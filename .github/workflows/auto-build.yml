@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         compiler: [gcc, mingw, clang]
 
     runs-on: ${{ matrix.os }} # 根据矩阵中 os 变量值选择操作系统
