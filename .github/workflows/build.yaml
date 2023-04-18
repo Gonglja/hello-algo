@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ] # 在 main 分支上接收 push 事件
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        compiler: [gcc, mingw, clang]
+
+    runs-on: ${{ matrix.os }} # 根据矩阵中 os 变量值选择操作系统
+
+    steps:
+    - uses: actions/checkout@v2 # 使用 checkout action 拉取代码库
+
+    - name: Set up environment # 设置环境变量
+      run: |
+        if [ ${{ matrix.compiler }} = "gcc" ]; then
+          sudo apt-get install -y gcc
+        elif [ ${{ matrix.compiler }} = "mingw" ]; then
+          sudo apt-get install -y mingw-w64
+        elif [ ${{ matrix.compiler }} = "clang" ]; then
+          sudo apt-get install -y clang
+        fi
+
+    - name: Build # 构建目标
+      run: |
+        mkdir build_cpp && cd build_cpp 
+        cmake codes/cpp -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} && make
