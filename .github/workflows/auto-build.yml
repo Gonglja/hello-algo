@@ -1,8 +1,8 @@
-name: Build
+name: Auto Build Codes
 
 on:
   push:
-    branches: [ main ] # 在 main 分支上接收 push 事件
+    branches: [ feat-test-auto-build ] # 在 feat-test-auto-build 分支上接收 push 事件
 
 jobs:
   build:
