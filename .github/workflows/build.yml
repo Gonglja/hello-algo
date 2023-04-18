@@ -29,4 +29,4 @@ jobs:
     - name: Build # 构建目标
       run: |
         mkdir build_cpp && cd build_cpp 
-        cmake codes/cpp -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} && make
+        cmake codes/cpp -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} && make -j$nproc
