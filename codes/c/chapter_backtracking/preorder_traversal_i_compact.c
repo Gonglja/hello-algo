@@ -6,13 +6,35 @@
 
 #include "../utils/common.h"
 
-vector *res;
+struct Result {
+    TreeNode **data;
+    int dataSize;
+};
 
-// 打印向量中的元素
-void printFunc(vector *v, void *p) {
-    TreeNode *node = p;
-    printf("%d ", node->val);
+typedef struct Result Result;
+
+Result *newResult() {
+    Result *p = malloc(sizeof(Result));
+    p->data = NULL;
+    p->dataSize = 0;
+    return p;
 }
+
+void delResult(Result *res) {
+    for (int i = 0; i < res->dataSize; i++) {
+        free(res->data[i]);
+    }
+    free(res);
+}
+
+void printResult(Result *res) {
+    for (int i = 0; i < res->dataSize; i++) {
+        printf("%d ", res->data[i]->val);
+    }
+    printf("\n");
+}
+
+Result *res;
 
 /* 前序遍历：例题一 */
 void preOrder(TreeNode *root) {
@@ -21,7 +43,8 @@ void preOrder(TreeNode *root) {
     }
     if (root->val == 7) {
         // 记录解
-        vectorPushback(res, root, sizeof(int));
+        res->data = realloc(res->data, (res->dataSize + 1) * sizeof(TreeNode *));
+        res->data[res->dataSize++] = root;
     }
     preOrder(root->left);
     preOrder(root->right);
@@ -30,7 +53,7 @@ void preOrder(TreeNode *root) {
 /* Driver Code */
 int main() {
     int arr[] = {1, 7, 3, 4, 5, 6, 7};
-    res = newVector();
+    res = newResult();
     TreeNode *root = arrToTree(arr, sizeof(arr) / sizeof(arr[0]));
     printf("\n初始化二叉树\r\n");
     printTree(root);
@@ -39,6 +62,6 @@ int main() {
     preOrder(root);
 
     printf("\n输出所有值为 7 的节点\r\n");
-    printVector(res, printFunc);
-    delVector(res);
+    printResult(res);
+    delResult(res);
 }
