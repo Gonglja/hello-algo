@@ -3,43 +3,55 @@
  * Created Time: 2023-06-04
  * Author: Gonglja (glj0@outlook.com)
  */
-
 #include "../utils/common.h"
 
+#define MAX_PATH_SIZE 1000
+#define MAX_PATH_LEN  100
+
+TreeNode *path[MAX_PATH_LEN];
+int pathSize = 0;
+
+TreeNode *res[MAX_PATH_SIZE][MAX_PATH_LEN];
+int resSize[MAX_PATH_SIZE];
+int resIdx = 0;
+
 /* 前序遍历：例题三 */
-void preOrder(TreeNode *root, vector *path, vector *res) {
+void preOrder(TreeNode *root) {
     // 剪枝
     if (root == NULL || root->val == 3) {
         return;
     }
     // 尝试
-    vectorPushback(path, root, sizeof(TreeNode));
+    path[pathSize++] = root;
+
     if (root->val == 7) {
         // 记录解
-        vector *newPath = newVector();
-        for (int i = 0; i < path->size; i++) {
-            vectorPushback(newPath, path->data[i], sizeof(int));
+        for (int i = 0; i < pathSize; i++) {
+            res[resIdx][i] = path[i];
         }
-        vectorPushback(res, newPath, sizeof(vector));
-        res->depth++;
+        resSize[resIdx] = pathSize;
+        resIdx++;
     }
 
-    preOrder(root->left, path, res);
-    preOrder(root->right, path, res);
+    preOrder(root->left);
+    preOrder(root->right);
 
     // 回退
-    vectorPopback(path);
+    pathSize--;
 }
 
 // 打印向量中的元素
-void printResult(vector *vv) {
-    for (int i = 0; i < vv->size; i++) {
-        vector *v = (vector *)vv->data[i];
-        for (int j = 0; j < v->size; j++) {
-            TreeNode *node = (TreeNode *)v->data[j];
-            printf("%d ", node->val);
+void printResult() {
+    for (int i = 0; i < resIdx; i++) {
+        printf("[");
+        for (int j = 0; j < resSize[i]; j++) {
+            if (j == resSize[i] - 1) {
+                printf("%d", res[i][j]->val);
+            } else {
+                printf("%d, ", res[i][j]->val);
+            }
         }
-        printf("\n");
+        printf("]\n");
     }
 }
 
@@ -51,19 +63,12 @@ int main() {
     printf("\r\n初始化二叉树\r\n");
     printTree(root);
 
-    // 创建存储路径和结果的向量
-    vector *path = newVector();
-    vector *res = newVector();
-
     // 前序遍历
-    preOrder(root, path, res);
-
+    preOrder(root);
     // 输出结果
-    printf("输出所有根节点到节点 7 的路径，要求路径中不包含值为 3 的节点:\n");
-    printResult(res);
+    printf("输出所有根节点到节点 7 的路径，要求路径中不包含值为 3 的节点\n");
+    printResult();
 
-    // 释放内存
-    delVector(path);
-    delVector(res);
+    freeMemoryTree(root);
     return 0;
 }
