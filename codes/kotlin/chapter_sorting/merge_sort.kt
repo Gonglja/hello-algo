@@ -19,7 +19,7 @@ fun merge(nums: IntArray, left: Int, mid: Int, right: Int) {
     while (i <= mid && j <= right) {
         if (nums[i] <= nums[j])
             tmp[k++] = nums[i++]
-        else 
+        else
             tmp[k++] = nums[j++]
     }
     // 将左子数组和右子数组的剩余元素复制到临时数组中
@@ -40,7 +40,7 @@ fun mergeSort(nums: IntArray, left: Int, right: Int) {
     // 终止条件
     if (left >= right) return  // 当子数组长度为 1 时终止递归
     // 划分阶段
-    val mid = (left + right) / 2 // 计算中点
+    val mid = left + (right - left) / 2 // 计算中点
     mergeSort(nums, left, mid) // 递归左子数组
     mergeSort(nums, mid + 1, right) // 递归右子数组
     // 合并阶段
